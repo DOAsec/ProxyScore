@@ -13,7 +13,7 @@ class ProxyScore {
         return !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE);
     }
 
-    public function getScoreJSON() {
+    public function getScore() {
         if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
             $this->$xforwardeddetect = $_SERVER["HTTP_X_FORWARDED_FOR"];
             $this->$proxyscore += 2;
@@ -30,7 +30,11 @@ class ProxyScore {
                 $this->$proxyscore += 1;
         }
 
-        return json_encode(array("ipaddr" => $_SERVER["REMOTE_ADDR"], "xforwarded" => $xforwardeddetect, "proxyscore" => $proxyscore));
+        return array("ipaddr" => $_SERVER["REMOTE_ADDR"], "xforwarded" => $xforwardeddetect, "proxyscore" => $proxyscore);
+    }
+    
+    public function getScoreJSON() {
+        return json_encode(getScore());
     }
 }
 
